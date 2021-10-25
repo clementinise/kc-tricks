@@ -1,6 +1,6 @@
 # kc-tricks [![Release](https://img.shields.io/badge/Release-V%201.0-blue)](https://github.com/clementinise/kc-tricks/releases/latest)
 
-Motocross/Bike tricks resource for FiveM servers - https://forum.cfx.re/t/
+Motocross/Bike tricks resource for FiveM servers - https://forum.cfx.re/t/standalone-motocross-tricks-kc-tricks-free/4773158
 
 ## FEATURES
 * Motocross/Bike tricks using SPACEBAR or X with 4th or 5th mouse button
