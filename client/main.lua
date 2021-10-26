@@ -23,12 +23,12 @@ function Stunt(Anim, Start, Mid1, Mid2, Loop, StuntBool)
 		while IsControlPressed(0, key) do
 			if not IsEntityPlayingAnim(Player, dict, Anim, 3) then
 				TaskPlayAnimAdvanced(Player, dict, Anim, 0, 0, 0, 0, 0, 0, 8.0, 8.0, -1, 0, Start, false, false)
-			elseif GetEntityAnimCurrentTime(Player, dict, Anim) >= Mid1 and GetEntityAnimCurrentTime(Player, dict, Anim) < Mid2 and IsEntityInAir(Veh) then
-				TaskPlayAnimAdvanced(Player, dict, Anim, 0, 0, 0, 0, 0, 0, 8.0, 8.0, -1, 0, Loop, false, false)
 			elseif inKeyAnim then
 				inKeyAnim = false
 				StuntOn = nil
 				return
+			elseif GetEntityAnimCurrentTime(Player, dict, Anim) >= Mid1 and GetEntityAnimCurrentTime(Player, dict, Anim) < Mid2 and IsEntityInAir(Veh) then
+				TaskPlayAnimAdvanced(Player, dict, Anim, 0, 0, 0, 0, 0, 0, 8.0, 8.0, -1, 0, Loop, false, false)
 			elseif not IsEntityInAir(Veh) then
 				if Config.Eject then
 					Eject()
@@ -46,73 +46,82 @@ end
 
 RegisterCommand('stunt1', function()
 
-	if IsControlPressed(0, key2) then
-		return
-	elseif IsControlPressed(0, key1) then
-		key = key1
-		inKeyAnim = true
-		Wait(50)
-	end
-	inKeyAnim = false
+	if SpecificVehicle(Config.Vehicles, GetDisplayNameFromVehicleModel(GetEntityModel(GetVehiclePedIsIn(PlayerPedId())))) then
+		if IsControlPressed(0, key2) then
+			return
+		elseif IsControlPressed(0, key1) then
+			key = key1
+			inKeyAnim = true
+			Wait(50)
+		end
+		inKeyAnim = false
 
-	if StuntOn == true or StuntOn == nil then
-		Stunt('idle_b', 0.28, 0.5, 0.54, 0.50, true)
-		IfInAnim()
+		if StuntOn == true or StuntOn == nil then
+			Stunt('idle_b', 0.28, 0.5, 0.54, 0.50, true)
+			IfInAnim()
+		end
 	end
 
 end)
 
 RegisterCommand('stunt2', function()
 
-	if IsControlPressed(0, key2) then
-		return
-	elseif IsControlPressed(0, key1) then
-		key = key1
-		inKeyAnim = true
-		Wait(50)
-	end
-	inKeyAnim = false
+	if SpecificVehicle(Config.Vehicles, GetDisplayNameFromVehicleModel(GetEntityModel(GetVehiclePedIsIn(PlayerPedId())))) then
+		if IsControlPressed(0, key2) then
+			return
+		elseif IsControlPressed(0, key1) then
+			key = key1
+			inKeyAnim = true
+			Wait(50)
+		end
+		inKeyAnim = false
 
-	if StuntOn == false or StuntOn == nil then
-		Stunt('idle_c', 0.15, 0.44, 0.52, 0.46, false)
-		IfInAnim()
+		if StuntOn == false or StuntOn == nil then
+			Stunt('idle_c', 0.15, 0.44, 0.52, 0.46, false)
+			IfInAnim()
+		end
 	end
 
 end)
 
 RegisterCommand('stunt3', function()
 
-	if IsControlPressed(0, key2) then
-		key = key2
-		inKeyAnim = true
-		Wait(50)
-	elseif IsControlPressed(0, key1) then
-		return
-	end
-	inKeyAnim = false
+	if SpecificVehicle(Config.Vehicles, GetDisplayNameFromVehicleModel(GetEntityModel(GetVehiclePedIsIn(PlayerPedId())))) then
+		if IsControlPressed(0, key2) then
+			key = key2
+			inKeyAnim = true
+			Wait(50)
+		elseif IsControlPressed(0, key1) then
+			return
+		end
+		inKeyAnim = false
 
-	if StuntOn == true or StuntOn == nil then
-		Stunt('idle_d', 0.18, 0.69, 0.71, 0.20, true)
-		IfInAnim()
+		if StuntOn == true or StuntOn == nil then
+			Stunt('idle_d', 0.18, 0.69, 0.71, 0.20, true)
+			IfInAnim()
+		end
 	end
 
 end)
 
 RegisterCommand('stunt4', function()
 
-	if IsControlPressed(0, key2) then
-		key = key2
-		inKeyAnim = true
-		Wait(50)
-	elseif IsControlPressed(0, key1) then
-		return
+	if SpecificVehicle(Config.Vehicles, GetDisplayNameFromVehicleModel(GetEntityModel(GetVehiclePedIsIn(PlayerPedId())))) then
+		if IsControlPressed(0, key2) then
+			key = key2
+			inKeyAnim = true
+			Wait(50)
+		elseif IsControlPressed(0, key1) then
+			return
+		end
+		inKeyAnim = false
+	
+		if StuntOn == false or StuntOn == nil then
+			Stunt('idle_e', 0.15, 0.35, 0.37, 0.35, false)
+			IfInAnim()
+		end
 	end
-	inKeyAnim = false
-
-	if StuntOn == false or StuntOn == nil then
-		Stunt('idle_e', 0.15, 0.35, 0.37, 0.35, false)
-		IfInAnim()
-	end
+	
 
 end)
 
@@ -137,4 +146,16 @@ function LoadDict()
 		RequestAnimDict(dict)
 	end
 	dictLoaded = true
+end
+
+function SpecificVehicle(table, val)
+	if Config.SpecificVehicle == true then
+		for i=1,#table do
+			if table[i] == val then
+				return true
+			end
+		end
+		return false
+	end
+	return true
 end
