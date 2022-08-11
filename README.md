@@ -3,7 +3,7 @@
 Motocross/Bike tricks resource for FiveM servers - https://forum.cfx.re/t/standalone-motocross-tricks-kc-tricks-free/4773158
 
 ## FEATURES
-* Motocross/Bike tricks using SPACEBAR or X with 4th or 5th mouse button
+* Motocross/Bike tricks using SPACEBAR or X (Left Click or Right Click for SPACEBAR and 4th or 5th mouse button for X)
 * Run at 0.00ms on idle and 0.02ms max when doing a trick
 ## kc-tricks is easily configurable: 
 * **Config.Eject**
