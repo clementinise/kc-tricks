@@ -19,28 +19,54 @@ function Stunt(Anim, Start, Mid1, Mid2, Loop, StuntBool)
 		LoadDict()
 	end
 
-	if IsEntityInAir(Veh) and IsThisModelABike(Model) then
-		while IsControlPressed(0, key) do
-			if not IsEntityPlayingAnim(Player, dict, Anim, 3) then
-				TaskPlayAnimAdvanced(Player, dict, Anim, 0, 0, 0, 0, 0, 0, 8.0, 8.0, -1, 0, Start, false, false)
-			elseif inKeyAnim then
-				inKeyAnim = false
-				StuntOn = nil
-				return
-			elseif GetEntityAnimCurrentTime(Player, dict, Anim) >= Mid1 and GetEntityAnimCurrentTime(Player, dict, Anim) < Mid2 and IsEntityInAir(Veh) then
-				TaskPlayAnimAdvanced(Player, dict, Anim, 0, 0, 0, 0, 0, 0, 8.0, 8.0, -1, 0, Loop, false, false)
-			elseif not IsEntityInAir(Veh) then
-				if Config.Eject then
-					Eject()
-				else
-					ClearPedTasks(Player)
+	if IsEntityInAir(Veh) then
+		if Config.SpecificVehicle then
+			if SpecificVehicle(Config.Vehicles, GetDisplayNameFromVehicleModel(Model)) then
+				while IsControlPressed(0, key) do
+					if not IsEntityPlayingAnim(Player, dict, Anim, 3) then
+						TaskPlayAnimAdvanced(Player, dict, Anim, 0, 0, 0, 0, 0, 0, 8.0, 8.0, -1, 0, Start, false, false)
+					elseif inKeyAnim then
+						inKeyAnim = false
+						StuntOn = nil
+						return
+					elseif GetEntityAnimCurrentTime(Player, dict, Anim) >= Mid1 and GetEntityAnimCurrentTime(Player, dict, Anim) < Mid2 and IsEntityInAir(Veh) then
+						TaskPlayAnimAdvanced(Player, dict, Anim, 0, 0, 0, 0, 0, 0, 8.0, 8.0, -1, 0, Loop, false, false)
+					elseif not IsEntityInAir(Veh) then
+						if Config.Eject then
+							Eject()
+						else
+							ClearPedTasks(Player)
+						end
+						StuntOn = nil
+						return
+					end
+					Citizen.Wait(50)
 				end
 				StuntOn = nil
-				return
 			end
-			Citizen.Wait(50)
-		end 
-		StuntOn = nil
+		elseif IsThisModelABike(Model) then
+			while IsControlPressed(0, key) do
+				if not IsEntityPlayingAnim(Player, dict, Anim, 3) then
+					TaskPlayAnimAdvanced(Player, dict, Anim, 0, 0, 0, 0, 0, 0, 8.0, 8.0, -1, 0, Start, false, false)
+				elseif inKeyAnim then
+					inKeyAnim = false
+					StuntOn = nil
+					return
+				elseif GetEntityAnimCurrentTime(Player, dict, Anim) >= Mid1 and GetEntityAnimCurrentTime(Player, dict, Anim) < Mid2 and IsEntityInAir(Veh) then
+					TaskPlayAnimAdvanced(Player, dict, Anim, 0, 0, 0, 0, 0, 0, 8.0, 8.0, -1, 0, Loop, false, false)
+				elseif not IsEntityInAir(Veh) then
+					if Config.Eject then
+						Eject()
+					else
+						ClearPedTasks(Player)
+					end
+					StuntOn = nil
+					return
+				end
+				Citizen.Wait(50)
+			end
+			StuntOn = nil
+		end
 	end
 end
 
