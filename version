@@ -1,5 +1,6 @@
 <1.3>
 - ADDED: Config.InstantAnimStop - This value determines whether the anim should instantly stopped, otherwise it will just go back to the sitting position gradually
+- ADDED: New export "exports['kc-tricks']:IsDoingTricks()": Returns whether the player is doing tricks
 - REMOVED: Config.OtherKey - It's better to only have one key for performing tricks, this addition was unnecessary...
 - FIX: Chaining tricks will now work properly
 - FIX: Tricks will stop performing if landed
