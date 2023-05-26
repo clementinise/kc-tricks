@@ -1,19 +1,19 @@
-# kc-tricks [![Release](https://img.shields.io/badge/Release-V%201.1-blue)](https://github.com/clementinise/kc-tricks/releases/latest)
+# kc-tricks [![Release](https://img.shields.io/badge/Release-V%201.3-blue)](https://github.com/clementinise/kc-tricks/releases/latest)
 
 Motocross/Bike tricks resource for FiveM servers - https://forum.cfx.re/t/standalone-motocross-tricks-kc-tricks-free/4773158
 
 ## FEATURES
-* Motocross/Bike tricks using SPACEBAR or X (Left Click or Right Click for SPACEBAR and 4th or 5th mouse button for X)
+* Motocross/Bike tricks using SPACEBAR (Left Click/Right Click/4th or 5th mouse button)
 * Run at 0.00ms on idle and 0.02ms max when doing a trick
 ## kc-tricks is easily configurable: 
 * **Config.Eject**
 Player will be ejected if they land while doing a trick. If set to false, they will not fall but the anim will stop
+* **Config.InstantAnimStop**
+This value determines whether the anim should instantly stopped, otherwise it will just go back to the sitting position gradually
 * **Config.SimpleKey**
 Set the key used for the simple tricks (Default is 76, 'INPUT_VEH_HANDBRAKE' aka SPACEBAR)
-* **Config.OtherKey**
-Set the key used for the advanced tricks (Default is 73, 'INPUT_VEH_DUCK' aka X)
-
-
+* **Config.SpecificVehicle**
+You will be able to do tricks only on some specific bikes from the 'Config.Vehicles' list
 
 **Preview:** [Streamable](https://streamable.com/tr4ozn)
 
