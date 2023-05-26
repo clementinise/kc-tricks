@@ -1,187 +1,86 @@
-local isInAnim, dictLoaded, inKeyAnim, StuntOn, key = false, false, false, nil, nil
+local animDict = 'rcmextreme2atv'
+local inTricks = false
+local animParams = {
+    ['stunt1'] = {'idle_b', 0.28, 0.5, 0.54, 0.50},
+    ['stunt2'] = {'idle_c', 0.15, 0.44, 0.52, 0.46},
+    ['stunt3'] = {'idle_d', 0.18, 0.69, 0.71, 0.20},
+    ['stunt4'] = {'idle_e', 0.15, 0.35, 0.37, 0.35},
+}
 
-local dict, key1, key2 = 'rcmextreme2atv', Config.SimpleKey, Config.OtherKey
+local buttons = {
+    ['stunt1'] = 'MOUSE_LEFT',
+    ['stunt2'] = 'MOUSE_RIGHT',
+    ['stunt3'] = 'MOUSE_EXTRABTN1',
+    ['stunt4'] = 'MOUSE_EXTRABTN2',
+}
 
-RegisterKeyMapping('stunt1', 'Stunt 1', 'MOUSE_BUTTON', 'MOUSE_LEFT')
-RegisterKeyMapping('stunt2', 'Stunt 2', 'MOUSE_BUTTON', 'MOUSE_RIGHT')
-RegisterKeyMapping('stunt3', 'Stunt 3', 'MOUSE_BUTTON', 'MOUSE_EXTRABTN1')
-RegisterKeyMapping('stunt4', 'Stunt 4', 'MOUSE_BUTTON', 'MOUSE_EXTRABTN2')
-
-function Stunt(Anim, Start, Mid1, Mid2, Loop, StuntBool)
-	isInAnim = true
-	Player = PlayerPedId()
-	Veh = GetVehiclePedIsIn(Player, false)
-	Model = GetEntityModel(Veh)
-
-	StuntOn = StuntBool
-
-	if not dictLoaded then
-		LoadDict()
-	end
-
-	if IsEntityInAir(Veh) then
-		if Config.SpecificVehicle then
-			if SpecificVehicle(Config.Vehicles, GetDisplayNameFromVehicleModel(Model)) then
-				while IsControlPressed(0, key) do
-					if not IsEntityPlayingAnim(Player, dict, Anim, 3) then
-						TaskPlayAnimAdvanced(Player, dict, Anim, 0, 0, 0, 0, 0, 0, 8.0, 8.0, -1, 0, Start, false, false)
-					elseif inKeyAnim then
-						inKeyAnim = false
-						StuntOn = nil
-						return
-					elseif GetEntityAnimCurrentTime(Player, dict, Anim) >= Mid1 and GetEntityAnimCurrentTime(Player, dict, Anim) < Mid2 and IsEntityInAir(Veh) then
-						TaskPlayAnimAdvanced(Player, dict, Anim, 0, 0, 0, 0, 0, 0, 8.0, 8.0, -1, 0, Loop, false, false)
-					elseif not IsEntityInAir(Veh) then
-						if Config.Eject then
-							Eject()
-						else
-							ClearPedTasks(Player)
-						end
-						StuntOn = nil
-						return
-					end
-					Citizen.Wait(50)
-				end
-				StuntOn = nil
-			end
-		elseif IsThisModelABike(Model) then
-			while IsControlPressed(0, key) do
-				if not IsEntityPlayingAnim(Player, dict, Anim, 3) then
-					TaskPlayAnimAdvanced(Player, dict, Anim, 0, 0, 0, 0, 0, 0, 8.0, 8.0, -1, 0, Start, false, false)
-				elseif inKeyAnim then
-					inKeyAnim = false
-					StuntOn = nil
-					return
-				elseif GetEntityAnimCurrentTime(Player, dict, Anim) >= Mid1 and GetEntityAnimCurrentTime(Player, dict, Anim) < Mid2 and IsEntityInAir(Veh) then
-					TaskPlayAnimAdvanced(Player, dict, Anim, 0, 0, 0, 0, 0, 0, 8.0, 8.0, -1, 0, Loop, false, false)
-				elseif not IsEntityInAir(Veh) then
-					if Config.Eject then
-						Eject()
-					else
-						ClearPedTasks(Player)
-					end
-					StuntOn = nil
-					return
-				end
-				Citizen.Wait(50)
-			end
-			StuntOn = nil
-		end
-	end
+for stunt, button in pairs(buttons) do
+    RegisterKeyMapping(stunt, 'Stunt '..stunt:sub(6), 'MOUSE_BUTTON', button)
 end
 
-RegisterCommand('stunt1', function()
+function PerformStunt(stunt)
+    local Player = PlayerPedId()
+    local Veh = GetVehiclePedIsIn(Player, false)
+    local Model = GetEntityModel(Veh)
+    local vehicleName = GetDisplayNameFromVehicleModel(Model)
 
-	if SpecificVehicle(Config.Vehicles, GetDisplayNameFromVehicleModel(GetEntityModel(GetVehiclePedIsIn(PlayerPedId())))) then
-		if IsControlPressed(0, key2) then
-			return
-		elseif IsControlPressed(0, key1) then
-			key = key1
-			inKeyAnim = true
-			Wait(50)
-		end
-		inKeyAnim = false
+    if not SpecificVehicle(Config.Vehicles, vehicleName) then return end
 
-		if StuntOn == true or StuntOn == nil then
-			Stunt('idle_b', 0.28, 0.5, 0.54, 0.50, true)
-			IfInAnim()
-		end
-	end
+    local animName, Start, Mid1, Mid2, Loop = table.unpack(animParams[stunt])
 
-end)
+    if not HasAnimDictLoaded(animDict) then
+        RequestAnimDict(animDict)
+        while not HasAnimDictLoaded(animDict) do Wait(50) end
+    end
 
-RegisterCommand('stunt2', function()
+    if IsEntityInAir(Veh) then
 
-	if SpecificVehicle(Config.Vehicles, GetDisplayNameFromVehicleModel(GetEntityModel(GetVehiclePedIsIn(PlayerPedId())))) then
-		if IsControlPressed(0, key2) then
-			return
-		elseif IsControlPressed(0, key1) then
-			key = key1
-			inKeyAnim = true
-			Wait(50)
-		end
-		inKeyAnim = false
+        inTricks = false
+        Wait(50)
+        inTricks = true
 
-		if StuntOn == false or StuntOn == nil then
-			Stunt('idle_c', 0.15, 0.44, 0.52, 0.46, false)
-			IfInAnim()
-		end
-	end
+        while IsControlPressed(0, Config.SimpleKey) and inTricks do
+            if not IsEntityPlayingAnim(Player, animDict, animName, 3) then
+                TaskPlayAnimAdvanced(Player, animDict, animName, 0, 0, 0, 0, 0, 0, 8.0, 8.0, -1, 0, Start, false, false)
+            elseif GetEntityAnimCurrentTime(Player, animDict, animName) >= Mid1 and GetEntityAnimCurrentTime(Player, animDict, animName) < Mid2 and IsEntityInAir(Veh) then
+                TaskPlayAnimAdvanced(Player, animDict, animName, 0, 0, 0, 0, 0, 0, 8.0, 8.0, -1, 0, Loop, false, false)
+            elseif not IsEntityInAir(Veh) then
+                if Config.Eject then
+                    Eject(Player, Veh)
+                else
+                    if Config.InstantAnimStop then ClearPedTasks(Player) else StopAnimTask(Player, animDict, animName, 1.0) end
+                end
+                return
+            end
+            Wait(50)
+        end
+		if Config.InstantAnimStop then ClearPedTasks(Player) else StopAnimTask(Player, animDict, animName, 1.0) end
+    end
+end
 
-end)
+for stunt, _ in pairs(animParams) do
+    RegisterCommand(stunt, function() PerformStunt(stunt) end)
+end
 
-RegisterCommand('stunt3', function()
-
-	if SpecificVehicle(Config.Vehicles, GetDisplayNameFromVehicleModel(GetEntityModel(GetVehiclePedIsIn(PlayerPedId())))) then
-		if IsControlPressed(0, key2) then
-			key = key2
-			inKeyAnim = true
-			Wait(50)
-		elseif IsControlPressed(0, key1) then
-			return
-		end
-		inKeyAnim = false
-
-		if StuntOn == true or StuntOn == nil then
-			Stunt('idle_d', 0.18, 0.69, 0.71, 0.20, true)
-			IfInAnim()
-		end
-	end
-
-end)
-
-RegisterCommand('stunt4', function()
-
-	if SpecificVehicle(Config.Vehicles, GetDisplayNameFromVehicleModel(GetEntityModel(GetVehiclePedIsIn(PlayerPedId())))) then
-		if IsControlPressed(0, key2) then
-			key = key2
-			inKeyAnim = true
-			Wait(50)
-		elseif IsControlPressed(0, key1) then
-			return
-		end
-		inKeyAnim = false
-	
-		if StuntOn == false or StuntOn == nil then
-			Stunt('idle_e', 0.15, 0.35, 0.37, 0.35, false)
-			IfInAnim()
-		end
-	end
-	
-
-end)
-
-function Eject()
-	Veh = GetVehiclePedIsIn(Player, false)
-	Vehv = GetEntityVelocity(Veh)
-	SetEntityCoords(Player, GetEntityCoords(Veh, 0.0, 0.0, -0.7))
+function Eject(Player, Veh)
+    local VehV = GetEntityVelocity(Veh)
+    SetEntityCoords(Player, GetEntityCoords(Veh, 0.0, 0.0, -0.7))
     SetPedToRagdoll(Player, 2800, 2800, 0, 0, 0, 0)
-    SetEntityVelocity(Player, Vehv.x * 1.5, Vehv.y * 1.5, Vehv.z)
-end
-
-function IfInAnim()
-	if isInAnim then
-		InAnim = false
-		ClearPedTasks(PlayerPedId())
-	end
-end
-
-function LoadDict()
-	while not HasAnimDictLoaded(dict) do
-		Wait(20)
-		RequestAnimDict(dict)
-	end
-	dictLoaded = true
+    SetEntityVelocity(Player, VehV.x * 1.5, VehV.y * 1.5, VehV.z)
 end
 
 function SpecificVehicle(table, val)
-	if Config.SpecificVehicle == true then
-		for i=1,#table do
-			if table[i] == val then
-				return true
-			end
-		end
-		return false
-	end
-	return true
+    if Config.SpecificVehicle then
+        for i=1,#table do
+            if table[i] == val then
+                return true
+            end
+        end
+        return false
+    end
+    return true
 end
+
+exports("IsDoingTricks", function()
+    return inTricks
+end)
