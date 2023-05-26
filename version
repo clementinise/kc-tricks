@@ -1,0 +1,14 @@
+<1.3>
+- ADDED: Config.InstantAnimStop - This value determines whether the anim should instantly stopped, otherwise it will just go back to the sitting position gradually
+- REMOVED: Config.OtherKey - It's better to only have one key for performing tricks, this addition was unnecessary...
+- FIX: Chaining tricks will now work properly
+- FIX: Tricks will stop performing if landed
+- HUGE REWORK
+<1.2>
+- FIX: Fixed Non-Bike model being excluded from the Config.Vehicles list
+<1.1>
+- ADDED: Config.SpecificVehicle - If set to true, you will be able to do tricks only on some specific bikes from the 'Config.Vehicles' list
+- ADDED: Config.Vehicles - List of vehicles by their gameName (Check Config.lua for more info)
+- FIX: You weren't able to properly chain tricks due to a misplaced "if" statement
+<1.0>
+- Initial Release
