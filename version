@@ -4,7 +4,7 @@
 - REMOVED: Config.OtherKey - It's better to only have one key for performing tricks, this addition was unnecessary...
 - FIX: Chaining tricks will now work properly
 - FIX: Tricks will stop performing if landed
-- HUGE REWORK
+- CODE REFACTOR
 <1.2>
 - FIX: Fixed Non-Bike model being excluded from the Config.Vehicles list
 <1.1>
